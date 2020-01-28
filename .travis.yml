@@ -3,10 +3,10 @@ python:
     - "3.6"
 
 services:
-    -docker
+    - docker
 
 before_script: pip install docker-compose
 
 script:
-    - docker-compose run app sh-c "python3 manage.py test && flake8"
+    - docker-compose run app python3 manage.py test && flake8
 
