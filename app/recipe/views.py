@@ -6,7 +6,9 @@ from recipe import serializers
 
 # Create your views here.
 
-class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class TagViewSet(viewsets.GenericViewSet, 
+                 mixins.ListModelMixin,
+                 mixins.CreateModelMixin):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
@@ -16,5 +18,8 @@ class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     def get_queryset(self):
         """REturn objects for current authenticated user"""
         return self.queryset.filter(user=self.request.user).order_by('-name')
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 

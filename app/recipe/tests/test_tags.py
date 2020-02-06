@@ -58,6 +58,29 @@ class PrivateTagsTests(TestCase):
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], tag.name)
 
+    def test_create_tags_success(self):
+        """Test creating new tag"""
+        new_tag = {
+            'name': 'Test tag'
+        }
+        self.client.post(TAGS_URL, new_tag)
+
+        tag_exists = Tag.objects.filter(
+            user=self.user,
+            name=new_tag['name']
+        ).exists()
+        self.assertTrue(tag_exists)
+
+    def test_create_tags_invalid(self):
+        """Test creating new tag with invalid syntax"""
+        new_tag = {
+            'name': ''
+        }
+        res = self.client.post(TAGS_URL, new_tag)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    
 
 
 
