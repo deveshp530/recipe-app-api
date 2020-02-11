@@ -22,7 +22,9 @@ class TagViewSet(viewsets.GenericViewSet,
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class IngredientViewSet(viewsets.GenericViewSet, mixins.ListModelMixin,):
+class IngredientViewSet(viewsets.GenericViewSet, 
+                        mixins.ListModelMixin,
+                        mixins.CreateModelMixin):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 

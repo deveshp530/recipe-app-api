@@ -53,7 +53,28 @@ class PrivateIngredientsTests(TestCase):
         ingredient = Ingredient.objects.create(user=self.user, name='Turmeric')
 
         res = self.client.get(INGREDIENT_URL)
-        
+
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
+
+    def test_create_ingredient_success(self):
+        """Test creating new ingredient"""
+        new_ingredient = {
+            'name': 'Cabbage'
+        }
+        self.client.post(INGREDIENT_URL, new_ingredient)
+
+        ingredient_exists = Ingredient.objects.filter(
+            user=self.user,
+            name=new_ingredient['name']
+        ).exists()
+        self.assertTrue(ingredient_exists)
+
+    def test_create_ingredient_invalid(self):
+        """Test creating new tag with invalid syntax"""
+        new_ingredient = {
+            'name': ''
+        }
+        res = self.client.post(INGREDIENT_URL, new_ingredient)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
