@@ -26,7 +26,6 @@ class TagViewSet(BaseRecipeAttrViewSet):
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
 
-
 class IngredientViewSet(BaseRecipeAttrViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
@@ -42,5 +41,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """REturn objects for current authenticated user"""
         return self.queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        """REturn appriopriate serizliser class"""
+        if self.action == 'retrieve':
+            return serializers.RecipeDetailSerializer
+        
+        return self.serializer_class
 
 
