@@ -5,8 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 # copy requirements file in recipe folder to docker image '/requirements.txt'
 COPY ./requirements.txt /requirements.txt
-RUN apk add --update --no-cache postgresql-client
-RUN apk add --update --no-cache --virtual .tmp-build-deps gcc libc-dev linux-headers postgresql-dev
+RUN apk add --update --no-cache postgresql-client jpeg-dev
+RUN apk add --update --no-cache --virtual .tmp-build-deps gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev
 
 RUN pip install -r /requirements.txt
 RUN apk del .tmp-build-deps
@@ -18,7 +18,13 @@ WORKDIR /app
 # copies app folder from local machine to app folder to docker image
 COPY ./app /app
 
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
+
+
 # creates user -D used for running applications
 RUN adduser -D user
 # switches docker to user we created
+RUN chown -R user:user /vol/
+RUN chmod -R 755 /vol/web
 USER user
